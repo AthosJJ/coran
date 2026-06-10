@@ -5,7 +5,7 @@
 
   // ── Constantes ──────────────────────────────────────────
   const KEY = 'wird:v1';
-  const APP_VERSION = '1.2.0';
+  const APP_VERSION = '1.2.1';
   const GOAL_MIN = 5, GOAL_MAX = 120, GOAL_STEP = 5;
   const THEME_COLOR = { night: '#0B1413', cream: '#F6EFE0' };
 
@@ -236,6 +236,19 @@
     const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
     const str = h > 0 ? h + ':' + pad2(m) + ':' + pad2(s) : m + ':' + pad2(s);
     return num(str);
+  }
+
+  // ── Taille du texte coranique : échelle 1 → 10 (100 % → 200 %) ──
+  const QS_LEVELS = 10;
+  function qsLevel() {
+    return Math.min(QS_LEVELS, Math.max(1, Math.round((state.quranScale - 1) * (QS_LEVELS - 1) + 1)));
+  }
+  function setQsLevel(lvl) {
+    const l = Math.min(QS_LEVELS, Math.max(1, lvl));
+    state.quranScale = Math.round((1 + (l - 1) / (QS_LEVELS - 1)) * 1000) / 1000;
+  }
+  function normalizeQuranScale() {
+    setQsLevel(qsLevel()); // recale les anciennes valeurs (ex. 0.8, 1.2) sur la grille
   }
   function fmtDur(sec) {
     if (sec < 60) return t().durS(num(sec));
@@ -761,7 +774,7 @@
           '<div class="set-row"><span class="set-label">' + t().textSize + '</span>' +
             '<div class="goal-ctrl">' +
               '<button class="goal-btn" data-action="qs-dec" aria-label="−">−</button>' +
-              '<span class="goal-val">' + num(Math.round(state.quranScale * 100)) + '<small>%</small></span>' +
+              '<span class="goal-val">' + num(qsLevel()) + '<small>/ ' + num(QS_LEVELS) + '</small></span>' +
               '<button class="goal-btn" data-action="qs-inc" aria-label="+">+</button>' +
             '</div></div>' +
           '<div class="set-row"><span class="set-label">' + t().tajRow + '</span>' +
@@ -846,11 +859,15 @@
           ? { surah: Number(obj.bookmark.surah), verse: Number(obj.bookmark.verse) || 1 } : null,
         best: Number(obj.best) || 0,
         goalMin: Math.min(GOAL_MAX, Math.max(GOAL_MIN, Number(obj.goalMin) || 20)),
+        quranScale: Number(obj.quranScale) || 1,
+        tajweed: obj.tajweed === true,
         theme: obj.theme === 'cream' ? 'cream' : 'night',
         lang: obj.lang === 'fr' ? 'fr' : 'ar',
         tab: 'settings'
       });
+      normalizeQuranScale();
       save();
+      if (state.tajweed && !TAJ) loadTajweed().catch(() => {});
       revSession = null;
       readerSurah = null;
       render();
@@ -957,7 +974,7 @@
   }
 
   // ── Rendu ───────────────────────────────────────────────
-  function renderBody() {
+  function renderBody(noFade) {
     if (!QURAN) return;
     const body = $('#body');
     const html = { home: homeHTML, surahs: surahsHTML, review: reviewHTML, stats: statsHTML, settings: settingsHTML }[state.tab]();
@@ -965,9 +982,14 @@
     // motif estompé quand du texte coranique occupe l'écran
     $('#app').classList.toggle('quran-screen',
       !!readerSurah || (state.tab === 'review' && !!revSession));
-    setTimeout(() => {
+    if (noFade) {
+      // classe ajoutée avant le rendu : aucun fondu, donc aucun flash
       body.querySelectorAll('.fade').forEach((el) => el.classList.add('in'));
-    }, 30);
+    } else {
+      setTimeout(() => {
+        body.querySelectorAll('.fade').forEach((el) => el.classList.add('in'));
+      }, 30);
+    }
     if (pendingVerse && readerSurah) {
       const v = pendingVerse;
       pendingVerse = null;
@@ -1021,6 +1043,14 @@
       save();
     }
     renderBody();
+  }
+
+  /* met à jour la valeur d'un stepper sans re-rendre l'écran */
+  function patchStepper(btn, html) {
+    const row = btn.closest('.set-row');
+    const val = row && row.querySelector('.goal-val');
+    if (val) val.innerHTML = html;
+    else renderBody(true);
   }
 
   // ── Statut des sourates ─────────────────────────────────
@@ -1123,27 +1153,27 @@
         save(); render();
         break;
       case 'goal-dec':
-        state.goalMin = Math.max(GOAL_MIN, state.goalMin - GOAL_STEP);
-        save(); renderBody();
-        break;
-      case 'goal-inc':
-        state.goalMin = Math.min(GOAL_MAX, state.goalMin + GOAL_STEP);
-        save(); renderBody();
-        break;
-      case 'qs-dec':
-      case 'qs-inc': {
-        const step = action === 'qs-inc' ? 0.1 : -0.1;
-        state.quranScale = Math.round(Math.min(1.6, Math.max(0.8, state.quranScale + step)) * 10) / 10;
-        save(); applyChrome(); renderBody();
+      case 'goal-inc': {
+        const d = action === 'goal-inc' ? GOAL_STEP : -GOAL_STEP;
+        state.goalMin = Math.min(GOAL_MAX, Math.max(GOAL_MIN, state.goalMin + d));
+        save();
+        // mise à jour en place : pas de re-rendu, donc pas de flash
+        patchStepper(el, num(state.goalMin) + '<small>' + t().goalUnit + '</small>');
         break;
       }
+      case 'qs-dec':
+      case 'qs-inc':
+        setQsLevel(qsLevel() + (action === 'qs-inc' ? 1 : -1));
+        save(); applyChrome();
+        patchStepper(el, num(qsLevel()) + '<small>/ ' + num(QS_LEVELS) + '</small>');
+        break;
       case 'set-taj':
         state.tajweed = el.dataset.v === 'on';
         save();
         if (state.tajweed && !TAJ) {
-          loadTajweed().then(() => renderBody()).catch(() => toast(t().updFail));
+          loadTajweed().then(() => renderBody(true)).catch(() => toast(t().updFail));
         }
-        renderBody();
+        renderBody(true);
         break;
       case 'export-data': exportData(); break;
       case 'import-data': { const f = $('#import-file'); if (f) f.click(); break; }
@@ -1197,6 +1227,7 @@
 
   // ── Démarrage ───────────────────────────────────────────
   function boot() {
+    normalizeQuranScale();
     applyChrome();
     renderChrome();
     fetch('data/quran.json')
