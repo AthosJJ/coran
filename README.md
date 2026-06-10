@@ -4,11 +4,12 @@ PWA de suivi de lecture et de mémorisation du Coran (lecture **Ḥafṣ ʿan ʿ
 
 ## Fonctionnalités
 
-- **Chrono de lecture** — bouton Démarrer/Arrêter au centre d'un anneau de progression vers l'objectif quotidien (réglable dans Statistiques). Chaque session est enregistrée ; le chrono survit à la fermeture de l'app (horodatage persistant).
-- **Suivi des 114 sourates** — trois états cyclables : non commencée → en cours de mémorisation → mémorisée. Filtres par état.
-- **Révision** — tire une sourate au hasard parmi les sourates mémorisées, puis un verset aléatoire (texte arabe Uthmani), avec « verset suivant » et « autre sourate ». Fonctionne 100 % hors ligne.
+- **Chrono de lecture** — bouton Démarrer/Arrêter au centre d'un anneau de progression vers l'objectif quotidien (réglable dans Réglages). Chaque session est enregistrée ; le chrono survit à la fermeture de l'app (horodatage persistant).
+- **Suivi des 114 sourates** — trois états cyclables : non commencée → en cours de mémorisation → mémorisée. Filtres par état, **recherche** (nom arabe, translittération, nom français ou numéro, insensible aux accents et harakāt) et **tri** (ordre du mushaf, les plus courtes d'abord, par état).
+- **Lecture d'une sourate** — taper une sourate ouvre son texte intégral (bismillah + versets en écriture Uthmani). Toucher un verset y pose le **signet de reprise** ; l'accueil affiche alors une carte « Reprendre la lecture » qui rouvre la sourate au bon verset.
+- **Révision intelligente** — tire une sourate parmi les mémorisées avec **pondération par ancienneté de révision** (les moins révisées récemment sortent en priorité, les jamais révisées d'abord), puis un verset aléatoire, avec « verset suivant » et « autre sourate ». Fonctionne 100 % hors ligne.
 - **Statistiques** — sourates mémorisées, temps total, série (streak) de jours consécutifs avec record, cumuls par jour et par semaine, barres des 7 derniers jours.
-- **Deux thèmes** (nuit / crème) et **deux langues** (arabe RTL / français LTR), commutables depuis les boutons en haut de l'écran.
+- **Réglages** — thème nuit/jour, langue arabe (RTL) / français (LTR), objectif quotidien, **export/import des données** (fichier JSON), **réinitialisation** (avec double confirmation) et **recherche de mise à jour**. Les boutons rapides thème/langue restent en haut d'écran, à position fixe quelle que soit la langue.
 
 ## Données coraniques : source et raisons du choix
 
@@ -35,7 +36,7 @@ La police Hafs est la conversion woff2 de la police officielle du KFGQPC, récup
 
 ## Stockage
 
-`localStorage` (clé `wird:v1`) plutôt qu'IndexedDB : les données (état des 114 sourates, journal des sessions, préférences) pèsent quelques Ko par an d'utilisation, l'API synchrone simplifie le code, et la persistance est suffisante pour une PWA installée. Les agrégats (jours, semaines, streak) sont recalculés à partir du journal des sessions, qui reste la seule source de vérité.
+`localStorage` (clé `wird:v1`) plutôt qu'IndexedDB : les données (état des 114 sourates, journal des sessions, signet, dates de dernière révision, préférences) pèsent quelques Ko par an d'utilisation, l'API synchrone simplifie le code, et la persistance est suffisante pour une PWA installée. Les agrégats (jours, semaines, streak) sont recalculés à partir du journal des sessions, qui reste la seule source de vérité. L'export JSON (Réglages → Données) sert de sauvegarde et de passerelle entre appareils.
 
 ## Déploiement sur GitHub Pages
 
@@ -50,7 +51,13 @@ Tous les chemins sont relatifs : l'app fonctionne servie depuis un sous-chemin (
 2. Bouton **Partager** → **Sur l'écran d'accueil**.
 3. L'app se lance en plein écran (standalone) et fonctionne ensuite hors ligne.
 
-> Après une mise à jour du site, incrémenter `VERSION` dans `sw.js` pour invalider l'ancien cache.
+### Publier une mise à jour
+
+1. Avant de pousser, incrémenter **`VERSION` dans `sw.js`** (ex. `wird-v3`) et **`APP_VERSION` dans `js/app.js`** (affichée dans Réglages).
+2. Pousser sur la branche publiée par GitHub Pages.
+3. Côté utilisateur, deux chemins :
+   - **automatique** : au prochain lancement en ligne, le navigateur détecte le nouveau `sw.js`, installe la nouvelle version et l'app affiche un bandeau « Nouvelle version prête — Actualiser » ;
+   - **manuel** : Réglages → « Rechercher une mise à jour » force la vérification, re-télécharge la coquille (requêtes conditionnelles, donc léger si rien n'a changé) et recharge l'app.
 
 ## Structure
 

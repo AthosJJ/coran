@@ -1,6 +1,7 @@
 /* وِرد — service worker : application entièrement hors ligne.
-   Pré-cache de la coquille, des données coraniques, des polices et des icônes. */
-const VERSION = 'wird-v1';
+   Pré-cache de la coquille, des données coraniques, des polices et des icônes.
+   Publier une mise à jour = incrémenter VERSION (et APP_VERSION dans js/app.js). */
+const VERSION = 'wird-v2';
 
 const ASSETS = [
   './',
@@ -34,6 +35,28 @@ self.addEventListener('activate', (event) => {
       .then(() => self.clients.claim())
   );
 });
+
+/* Mise à jour à la demande (bouton « Rechercher une mise à jour ») :
+   re-télécharge la coquille avec des requêtes conditionnelles (ETag → 304
+   si inchangé) et remplace le cache, puis prévient le client. */
+self.addEventListener('message', (event) => {
+  if (!event.data || event.data.type !== 'REFRESH_SHELL') return;
+  const job = refreshShell()
+    .then((ok) => { if (event.source) event.source.postMessage({ type: 'SHELL_REFRESHED', ok }); })
+    .catch(() => { if (event.source) event.source.postMessage({ type: 'SHELL_REFRESHED', ok: false }); });
+  if (event.waitUntil) event.waitUntil(job);
+});
+
+function refreshShell() {
+  return caches.open(VERSION).then((cache) =>
+    Promise.all(ASSETS.map((url) =>
+      fetch(url, { cache: 'no-cache' }).then((res) => {
+        if (!res.ok) throw new Error(url);
+        return cache.put(url, res);
+      })
+    )).then(() => true)
+  );
+}
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;

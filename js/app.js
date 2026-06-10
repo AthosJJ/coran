@@ -5,6 +5,7 @@
 
   // ── Constantes ──────────────────────────────────────────
   const KEY = 'wird:v1';
+  const APP_VERSION = '1.1.0';
   const GOAL_MIN = 5, GOAL_MAX = 120, GOAL_STEP = 5;
   const THEME_COLOR = { night: '#0B1413', cream: '#F6EFE0' };
 
@@ -12,7 +13,7 @@
   const STR = {
     ar: {
       appName: 'وِرد',
-      tabs: { home: 'الرئيسية', surahs: 'السور', review: 'المراجعة', stats: 'الإحصاء' },
+      tabs: { home: 'الرئيسية', surahs: 'السور', review: 'المراجعة', stats: 'الإحصاء', settings: 'الإعدادات' },
       themeBtn: 'تبديل المظهر', langBtn: 'Français',
       ofGoal: (g) => 'من هدف ' + g + ' دقيقة',
       recording: 'جارٍ تسجيل القراءة',
@@ -21,15 +22,23 @@
       startLabel: 'بدء القراءة', stopLabel: 'إيقاف القراءة',
       streakCard: 'سلسلة قراءة متتالية', dayUnit: 'يومًا',
       todayCard: 'قراءة اليوم', minUnit: 'دقيقة',
+      resumeCap: 'متابعة القراءة',
+      verseN: (v) => 'الآية ' + v,
       surahsTitle: 'السور',
       surahsSub: (a, b) => a + ' من ' + b + ' سورة محفوظة',
       filters: { all: 'الكل', l: 'محفوظة', p: 'قيد الحفظ' },
+      sorts: { mushaf: 'ترتيب المصحف', length: 'الأقصر أولًا', status: 'حسب الحالة' },
+      searchPh: 'ابحث: اسم أو رقم…',
       status: { l: 'محفوظة', p: 'قيد الحفظ', none: 'لم تبدأ' },
       verses: 'آيات', meccan: 'مكية', medinan: 'مدنية',
       statusBtn: (name, st) => 'حالة سورة ' + name + ': ' + st,
+      openSurah: (name) => 'افتح سورة ' + name,
       emptyCat: 'لا توجد سور في هذه الفئة بعد',
+      noResults: 'لا نتائج لهذا البحث',
+      back: 'السور',
+      readerHint: 'اضغط على آية لوضع علامة الاستئناف',
       revTitle: 'المراجعة',
-      revLead: 'سورة تُختار عشوائيًّا من محفوظاتك، ثم آية تتلوها من حفظك',
+      revLead: 'سورة من محفوظاتك — الأقل مراجعةً تُقدَّم — ثم آية تتلوها من حفظك',
       revEmpty: 'عَلِّم سورة واحدة على الأقل كي تبدأ المراجعة',
       goSurahs: 'إلى قائمة السور',
       draw: 'اسحب سورة',
@@ -48,14 +57,27 @@
       histDays: 'اليوميات الأخيرة', histWeeks: 'الأسابيع الأخيرة',
       weekOf: (d) => 'أسبوع ' + d,
       noReading: 'لا قراءة بعد — ابدأ جلستك الأولى من الرئيسية',
+      setTitle: 'الإعدادات', setSub: 'المظهر والبيانات والتحديث',
+      grpLook: 'المظهر', grpReading: 'القراءة', grpData: 'البيانات', grpApp: 'التطبيق',
+      themeRow: 'الوضع', themeNight: 'ليلي', themeDay: 'نهاري',
+      langRow: 'اللغة',
       goalCap: 'الهدف اليومي', goalUnit: 'دقيقة',
+      exportBtn: 'تصدير نسخة احتياطية', exportNote: 'ملف JSON يحوي جلساتك وحالات السور',
+      importBtn: 'استيراد نسخة', importOk: 'تم الاستيراد بنجاح', importBad: 'ملف غير صالح',
+      resetBtn: 'إعادة تعيين البيانات', resetConfirm: 'اضغط مجددًا للتأكيد',
+      resetNote: 'يمسح الجلسات وحالات السور والعلامة', resetDone: 'أُعيد تعيين البيانات',
+      updBtn: 'البحث عن تحديث',
+      updChecking: 'جارٍ التحقق…', updReloading: 'تم التحديث · إعادة التشغيل…',
+      updFail: 'تعذّر التحديث، حاول لاحقًا', updOffline: 'أنت غير متصل بالإنترنت',
+      updateReady: 'إصدار جديد جاهز', updateBtn: 'تحديث',
+      versionRow: 'الإصدار',
       attribution: 'نص المصحف: مشروع تنزيل (رواية حفص عن عاصم) · الخط: مجمع الملك فهد لطباعة المصحف الشريف',
       dur: (h, m) => (h > 0 ? h + ' س ' + m + ' د' : m + ' د'),
       durS: (s) => s + ' ث'
     },
     fr: {
       appName: 'Wird · وِرد',
-      tabs: { home: 'Accueil', surahs: 'Sourates', review: 'Révision', stats: 'Statistiques' },
+      tabs: { home: 'Accueil', surahs: 'Sourates', review: 'Révision', stats: 'Stats', settings: 'Réglages' },
       themeBtn: 'Changer de thème', langBtn: 'العربية',
       ofGoal: (g) => 'sur un objectif de ' + g + ' min',
       recording: 'Lecture en cours…',
@@ -64,15 +86,23 @@
       startLabel: 'Commencer la lecture', stopLabel: 'Arrêter la lecture',
       streakCard: 'jours de lecture consécutifs', dayUnit: '',
       todayCard: 'de lecture aujourd’hui', minUnit: 'min',
+      resumeCap: 'Reprendre la lecture',
+      verseN: (v) => 'verset ' + v,
       surahsTitle: 'Sourates',
       surahsSub: (a, b) => a + ' sur ' + b + ' sourates mémorisées',
       filters: { all: 'Toutes', l: 'Mémorisées', p: 'En cours' },
+      sorts: { mushaf: 'Ordre du mushaf', length: 'Les plus courtes', status: 'Par état' },
+      searchPh: 'Rechercher : nom ou numéro…',
       status: { l: 'mémorisée', p: 'en cours', none: 'non commencée' },
       verses: 'versets', meccan: 'mecquoise', medinan: 'médinoise',
       statusBtn: (name, st) => 'Statut de la sourate ' + name + ' : ' + st,
+      openSurah: (name) => 'Ouvrir la sourate ' + name,
       emptyCat: 'Aucune sourate dans cette catégorie pour l’instant',
+      noResults: 'Aucun résultat pour cette recherche',
+      back: 'Sourates',
+      readerHint: 'Touche un verset pour poser le signet de reprise',
       revTitle: 'Révision',
-      revLead: 'Une sourate est tirée au hasard parmi tes sourates mémorisées, puis un verset à réciter de mémoire',
+      revLead: 'Une sourate parmi tes mémorisées — les moins révisées en priorité — puis un verset à réciter de mémoire',
       revEmpty: 'Marque au moins une sourate comme mémorisée pour commencer la révision',
       goSurahs: 'Voir les sourates',
       draw: 'Tirer une sourate',
@@ -91,7 +121,20 @@
       histDays: 'Derniers jours', histWeeks: 'Dernières semaines',
       weekOf: (d) => 'Semaine du ' + d,
       noReading: 'Pas encore de lecture — lance ta première session depuis l’accueil',
+      setTitle: 'Réglages', setSub: 'Apparence, données et mise à jour',
+      grpLook: 'Apparence', grpReading: 'Lecture', grpData: 'Données', grpApp: 'Application',
+      themeRow: 'Mode', themeNight: 'Nuit', themeDay: 'Jour',
+      langRow: 'Langue',
       goalCap: 'Objectif quotidien', goalUnit: 'min',
+      exportBtn: 'Exporter une sauvegarde', exportNote: 'Fichier JSON avec sessions et états des sourates',
+      importBtn: 'Importer une sauvegarde', importOk: 'Sauvegarde importée', importBad: 'Fichier invalide',
+      resetBtn: 'Réinitialiser les données', resetConfirm: 'Toucher à nouveau pour confirmer',
+      resetNote: 'Efface sessions, états des sourates et signet', resetDone: 'Données réinitialisées',
+      updBtn: 'Rechercher une mise à jour',
+      updChecking: 'Vérification…', updReloading: 'Mise à jour installée · rechargement…',
+      updFail: 'Échec de la mise à jour, réessaie plus tard', updOffline: 'Tu es hors ligne',
+      updateReady: 'Nouvelle version prête', updateBtn: 'Actualiser',
+      versionRow: 'Version',
       attribution: 'Texte du Mushaf : projet Tanzil (riwāya Ḥafṣ ʿan ʿĀṣim) · Police : Complexe du Roi Fahd (KFGQPC)',
       dur: (h, m) => (h > 0 ? h + ' h ' + m + ' min' : m + ' min'),
       durS: (s) => s + ' s'
@@ -99,31 +142,41 @@
   };
 
   // ── État ────────────────────────────────────────────────
-  const DEFAULTS = {
-    statuses: {},        // n -> 'l' (محفوظة) | 'p' (قيد الحفظ)
-    sessions: [],        // { d: 'YYYY-MM-DD', t: epoch_ms, s: secondes }
-    best: 0,             // plus longue série atteinte
-    goalMin: 20,
-    theme: 'night',
-    lang: 'ar',
-    tab: 'home',
-    runningSince: null   // epoch_ms si une session est en cours
-  };
+  function freshState() {
+    return {
+      statuses: {},        // n -> 'l' (محفوظة) | 'p' (قيد الحفظ)
+      sessions: [],        // { d: 'YYYY-MM-DD', t: epoch_ms, s: secondes }
+      lastReviewed: {},    // n -> epoch_ms du dernier tirage en révision
+      bookmark: null,      // { surah, verse } signet de reprise
+      best: 0,             // plus longue série atteinte
+      goalMin: 20,
+      theme: 'night',
+      lang: 'ar',
+      tab: 'home',
+      runningSince: null   // epoch_ms si une session est en cours
+    };
+  }
 
   let state = loadState();
   let QURAN = null;          // { bismillah, surahs: [{n,name,tr,fr,medinan,verses}] }
   let filter = 'all';        // filtre de la liste des sourates
+  let query = '';            // recherche dans la liste
+  let sortMode = 'mushaf';   // mushaf | length | status
+  let readerSurah = null;    // sourate ouverte en lecture complète
+  let pendingVerse = null;   // verset vers lequel défiler à l'ouverture du lecteur
   let revSession = null;     // { surah, idx }
   let savedUntil = 0;        // affichage transitoire « session enregistrée »
   let savedText = '';
   let tickId = null;
+  let resetArmed = false, resetTimer = null, updTimer = null;
 
   function loadState() {
+    const base = freshState();
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) return Object.assign({}, DEFAULTS, JSON.parse(raw));
+      if (raw) return Object.assign(base, JSON.parse(raw));
     } catch (e) { /* stockage indisponible : on reste en mémoire */ }
-    return Object.assign({}, DEFAULTS);
+    return base;
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
@@ -140,9 +193,18 @@
     return isAr() ? s.replace(/[0-9]/g, (d) => AR_DIGITS[d]) : s;
   }
   const arNum = (v) => String(v).replace(/[0-9]/g, (d) => AR_DIGITS[d]);
+  const westNum = (s) => String(s).replace(/[٠-٩]/g, (d) => String(AR_DIGITS.indexOf(d)));
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function norm(s) {
+    return String(s).toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')                  // accents latins
+      .replace(/[\u064B-\u0652\u0670\u0653\u0640]/g, '') // harakāt + tatwīl
+      .replace(/[أإآٱ]/g, 'ا')           // hamzas → alif
+      .replace(/ى/g, 'ي').replace(/ة/g, 'ه')  // ى→ي · ة→ه
+      .replace(/['’ʻ\-\s]/g, '');
   }
 
   function pad2(n) { return String(n).padStart(2, '0'); }
@@ -255,11 +317,13 @@
     '<circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3L19 19M19 5l-1.7 1.7M6.7 17.3L5 19"></path></svg>';
   const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
     '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"></path></svg>';
+  const CHEV_SVG = '<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>';
   const TAB_ICONS = {
     home: '<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-7.5C5 8 8 5 12 5s7 3 7 7.5V20"></path><path d="M3 20h18"></path><path d="M12 5V3.5"></path></svg>',
     surahs: '<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.4 4 9.6 4 12 5.5c2.4-1.5 5.6-1.5 8 0v13c-2.4-1.5-5.6-1.5-8 0-2.4-1.5-5.6-1.5-8 0z"></path><path d="M12 5.5v13"></path></svg>',
     review: '<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2 6.5 6.5 2-6.5 2-2 6.5-2-6.5L3.5 12 10 10z"></path></svg>',
-    stats: '<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 20v-7"></path><path d="M12 20V6"></path><path d="M19 20v-10"></path></svg>'
+    stats: '<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 20v-7"></path><path d="M12 20V6"></path><path d="M19 20v-10"></path></svg>',
+    settings: '<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h9M17.5 7H20"></path><circle cx="15" cy="7" r="2.2"></circle><path d="M4 12h3M11.5 12H20"></path><circle cx="9" cy="12" r="2.2"></circle><path d="M4 17h10M18.5 17H20"></path><circle cx="16" cy="17" r="2.2"></circle></svg>'
   };
 
   // ── Écran accueil ───────────────────────────────────────
@@ -268,6 +332,20 @@
   function ringOffset(sec) {
     const p = Math.min(1, sec / (state.goalMin * 60));
     return RING_C * (1 - p);
+  }
+
+  function resumeCardHTML() {
+    const bm = state.bookmark;
+    if (!bm || !QURAN.surahs[bm.surah - 1]) return '';
+    const s = QURAN.surahs[bm.surah - 1];
+    const name = isAr() ? s.name : s.tr;
+    return '<button class="resume-card" data-action="resume">' +
+      '<span class="resume-glyph">' + star8(18, 1.2) + '</span>' +
+      '<span class="resume-main">' +
+        '<span class="resume-cap">' + t().resumeCap + '</span>' +
+        '<span class="resume-name">' + esc(name) + ' · ' + t().verseN(num(bm.verse)) + '</span>' +
+      '</span>' + CHEV_SVG +
+    '</button>';
   }
 
   function homeHTML() {
@@ -304,10 +382,11 @@
           '<div class="stat-num"><b id="today-min">' + num(Math.floor(today / 60)) + '</b> ' + t().minUnit + '</div>' +
           '<div class="stat-cap">' + t().todayCard + '</div></div>' +
       '</div>' +
+      resumeCardHTML() +
     '</section>';
   }
 
-  // ── Écran sourates ──────────────────────────────────────
+  // ── Écran sourates (liste) ──────────────────────────────
   function surahMeta(s, st) {
     const kind = s.medinan ? t().medinan : t().meccan;
     const stTxt = st ? ' · ' + t().status[st] : '';
@@ -320,7 +399,7 @@
     const learned = st === 'l';
     return '<div class="surah-row" data-row="' + s.n + '">' +
       '<div class="num-badge' + (learned ? ' on' : '') + '">' + star8(40, 1) + '<span>' + num(s.n) + '</span></div>' +
-      '<div class="surah-main">' +
+      '<div class="surah-main" data-action="open-surah" data-n="' + s.n + '" role="button" tabindex="0" aria-label="' + esc(t().openSurah(s.name)) + '">' +
         '<span class="surah-name" lang="ar" dir="rtl">' + esc(s.name) + '</span>' +
         '<span class="surah-meta">' + surahMeta(s, st) + '</span>' +
       '</div>' +
@@ -331,20 +410,86 @@
     '</div>';
   }
 
+  function filteredSurahs() {
+    let arr = QURAN.surahs.filter((s) => filter === 'all' || state.statuses[s.n] === filter);
+    const q = norm(query.trim());
+    if (q) {
+      const qn = westNum(query.trim());
+      arr = arr.filter((s) =>
+        norm(s.name).includes(q) || norm(s.tr).includes(q) || norm(s.fr).includes(q) ||
+        (/^\d+$/.test(qn) && String(s.n).startsWith(qn)));
+    }
+    if (sortMode === 'length') {
+      arr = arr.slice().sort((a, b) => a.verses.length - b.verses.length || a.n - b.n);
+    } else if (sortMode === 'status') {
+      const rank = { l: 0, p: 1, '': 2 };
+      arr = arr.slice().sort((a, b) =>
+        rank[state.statuses[a.n] || ''] - rank[state.statuses[b.n] || ''] || a.n - b.n);
+    }
+    return arr;
+  }
+
+  function surahListHTML() {
+    const rows = filteredSurahs();
+    if (!rows.length) {
+      return '<div class="empty"><span style="color:var(--faint)">' + star8(26, 1.2) + '</span><p>' +
+        (query.trim() ? t().noResults : t().emptyCat) + '</p></div>';
+    }
+    return rows.map(surahRowHTML).join('');
+  }
+
   function surahsHTML() {
-    const rows = QURAN.surahs.filter((s) => filter === 'all' || state.statuses[s.n] === filter);
+    if (readerSurah) return readerHTML();
     const chips = ['all', 'l', 'p'].map((f) =>
       '<button class="chip' + (filter === f ? ' on' : '') + '" data-action="filter" data-f="' + f + '">' + t().filters[f] + '</button>'
     ).join('');
-    const list = rows.length
-      ? rows.map(surahRowHTML).join('')
-      : '<div class="empty"><span style="color:var(--faint)">' + star8(26, 1.2) + '</span><p>' + t().emptyCat + '</p></div>';
+    const sorts = ['mushaf', 'length', 'status'].map((m) =>
+      '<button class="chip sm' + (sortMode === m ? ' on' : '') + '" data-action="sort" data-m="' + m + '">' + t().sorts[m] + '</button>'
+    ).join('');
     return '<section class="fade">' +
       '<div class="scr-head"><h1 class="scr-title">' + t().surahsTitle + '</h1>' +
       '<div class="scr-sub" id="learned-sub">' + t().surahsSub(num(learnedCount()), num(114)) + '</div></div>' +
+      '<div class="search-wrap"><input type="search" class="search" data-input="search" value="' + esc(query) + '" placeholder="' + esc(t().searchPh) + '" autocomplete="off"></div>' +
       '<div class="chips">' + chips + '</div>' +
-      '<div class="surah-list">' + list + '</div>' +
+      '<div class="chips sub">' + sorts + '</div>' +
+      '<div class="surah-list" id="surah-list">' + surahListHTML() + '</div>' +
     '</section>';
+  }
+
+  // ── Lecture complète d'une sourate ──────────────────────
+  function readerHTML() {
+    const s = QURAN.surahs[readerSurah - 1];
+    const bm = state.bookmark;
+    const frLine = isAr() ? '' :
+      '<div class="rev-surah-fr">' + esc(s.tr) + ' · ' + esc(s.fr) + '</div>';
+    const bismillah = (s.n !== 1 && s.n !== 9)
+      ? '<div class="rev-bismillah" lang="ar">' + esc(QURAN.bismillah) + '</div>' : '';
+    const segs = s.verses.map((v, i) => {
+      const n = i + 1;
+      const marked = bm && bm.surah === s.n && bm.verse === n;
+      return '<span class="verse-seg' + (marked ? ' bookmarked' : '') + '" data-action="mark-verse" data-v="' + n + '">' +
+        esc(v) + ' <span class="verse-num">﴿' + arNum(n) + '﴾</span></span>';
+    }).join(' ');
+    return '<section class="fade">' +
+      '<button class="back-btn" data-action="back-surahs">' + CHEV_SVG + '<span>' + t().back + '</span></button>' +
+      '<div class="rev-frame">' +
+        '<span class="rev-surah-cap">' + t().surahCap + '</span>' +
+        '<h1 class="rev-surah-name" lang="ar" dir="rtl">' + esc(s.name) + '</h1>' + frLine +
+        '<div class="rev-sep">' + star8(13, 1.2) + '</div>' +
+        '<div class="reader-hint">' + t().readerHint + '</div>' +
+        bismillah +
+        '<p class="reader-text" lang="ar" dir="rtl">' + segs + '</p>' +
+      '</div>' +
+    '</section>';
+  }
+
+  function openReader(n, scrollVerse) {
+    state.tab = 'surahs';
+    save();
+    readerSurah = n;
+    pendingVerse = scrollVerse || null;
+    renderChrome();
+    renderBody();
   }
 
   // ── Écran révision ──────────────────────────────────────
@@ -403,13 +548,26 @@
     '</section>';
   }
 
+  /* Tirage pondéré : plus une sourate n'a pas été révisée depuis longtemps,
+     plus elle a de chances de sortir (jamais révisée = prioritaire). */
   function drawSurah() {
     const pool = revPool();
     if (!pool.length) return;
-    let next = pool[Math.floor(Math.random() * pool.length)];
-    if (pool.length > 1 && revSession && next === revSession.surah) {
-      next = pool[(pool.indexOf(next) + 1) % pool.length];
+    let candidates = pool;
+    if (revSession && pool.length > 1) candidates = pool.filter((n) => n !== revSession.surah);
+    const now = Date.now();
+    const weights = candidates.map((n) => {
+      const last = state.lastReviewed[n] || 0;
+      return Math.max(0.5, (now - last) / 3600000); // âge en heures
+    });
+    let r = Math.random() * weights.reduce((a, b) => a + b, 0);
+    let next = candidates[candidates.length - 1];
+    for (let i = 0; i < candidates.length; i++) {
+      r -= weights[i];
+      if (r <= 0) { next = candidates[i]; break; }
     }
+    state.lastReviewed[next] = now;
+    save();
     const verses = QURAN.surahs[next - 1].verses;
     revSession = { surah: next, idx: Math.floor(Math.random() * verses.length) };
   }
@@ -480,19 +638,201 @@
           '<div class="big-cap">' + t().histWeeks + '</div>' +
           '<div class="hist-list">' + histWeeks + '</div>' +
         '</div>' +
+      '</div>' +
+    '</section>';
+  }
+
+  // ── Écran réglages ──────────────────────────────────────
+  function segHTML(action, options) {
+    return '<div class="seg">' + options.map((o) =>
+      '<button class="seg-btn' + (o.on ? ' on' : '') + '" data-action="' + action + '" data-v="' + o.v + '">' + esc(o.label) + '</button>'
+    ).join('') + '</div>';
+  }
+
+  function settingsHTML() {
+    return '<section class="fade">' +
+      '<div class="scr-head"><h1 class="scr-title">' + t().setTitle + '</h1>' +
+      '<div class="scr-sub">' + t().setSub + '</div></div>' +
+      '<div class="stats-grid">' +
+
         '<div class="big-stat">' +
-          '<div class="big-cap">' + t().goalCap + '</div>' +
-          '<div class="goal-row">' +
-            '<div class="goal-val">' + num(state.goalMin) + '<small>' + t().goalUnit + '</small></div>' +
+          '<div class="big-cap">' + t().grpLook + '</div>' +
+          '<div class="set-row"><span class="set-label">' + t().themeRow + '</span>' +
+            segHTML('set-theme', [
+              { v: 'night', label: t().themeNight, on: state.theme === 'night' },
+              { v: 'cream', label: t().themeDay, on: state.theme === 'cream' }
+            ]) + '</div>' +
+          '<div class="set-row"><span class="set-label">' + t().langRow + '</span>' +
+            segHTML('set-lang', [
+              { v: 'ar', label: 'العربية', on: isAr() },
+              { v: 'fr', label: 'Français', on: !isAr() }
+            ]) + '</div>' +
+        '</div>' +
+
+        '<div class="big-stat">' +
+          '<div class="big-cap">' + t().grpReading + '</div>' +
+          '<div class="set-row"><span class="set-label">' + t().goalCap + '</span>' +
             '<div class="goal-ctrl">' +
               '<button class="goal-btn" data-action="goal-dec" aria-label="−">−</button>' +
+              '<span class="goal-val">' + num(state.goalMin) + '<small>' + t().goalUnit + '</small></span>' +
               '<button class="goal-btn" data-action="goal-inc" aria-label="+">+</button>' +
-            '</div>' +
-          '</div>' +
+            '</div></div>' +
         '</div>' +
+
+        '<div class="big-stat">' +
+          '<div class="big-cap">' + t().grpData + '</div>' +
+          '<div class="set-row"><span class="set-label">' + t().exportBtn + '<span class="set-note">' + t().exportNote + '</span></span>' +
+            '<button class="set-btn" data-action="export-data">⤓</button></div>' +
+          '<div class="set-row"><span class="set-label">' + t().importBtn + '</span>' +
+            '<button class="set-btn" data-action="import-data">⤒</button>' +
+            '<input type="file" id="import-file" class="file-hidden" accept="application/json,.json"></div>' +
+          '<div class="set-row"><span class="set-label">' + t().resetBtn + '<span class="set-note">' + t().resetNote + '</span></span>' +
+            '<button class="set-btn danger" data-action="reset-data">✕</button></div>' +
+        '</div>' +
+
+        '<div class="big-stat">' +
+          '<div class="big-cap">' + t().grpApp + '</div>' +
+          '<div class="set-row"><span class="set-label">' + t().updBtn + '</span>' +
+            '<button class="set-btn" data-action="check-update">↻</button></div>' +
+          '<div class="upd-status" id="upd-status"></div>' +
+          '<div class="set-row"><span class="set-label">' + t().versionRow + '</span>' +
+            '<span class="set-value">' + num(APP_VERSION) + '</span></div>' +
+        '</div>' +
+
       '</div>' +
       '<div class="attribution">' + t().attribution + '</div>' +
     '</section>';
+  }
+
+  // ── Export / import / reset ─────────────────────────────
+  function exportData() {
+    const payload = Object.assign(
+      { _app: 'wird', _version: APP_VERSION, _exported: new Date().toISOString() },
+      state, { runningSince: null, tab: 'home' });
+    const json = JSON.stringify(payload, null, 2);
+    const name = 'wird-' + dayKey(new Date()) + '.json';
+    const file = new File([json], name, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: name }).catch(() => { /* annulé */ });
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  function importData(fileObj) {
+    fileObj.text().then((txt) => {
+      let obj;
+      try { obj = JSON.parse(txt); } catch (e) { toast(t().importBad); return; }
+      if (!obj || typeof obj !== 'object' || typeof obj.statuses !== 'object' || !Array.isArray(obj.sessions)) {
+        toast(t().importBad);
+        return;
+      }
+      const sessions = obj.sessions
+        .filter((s) => s && typeof s.d === 'string' && Number(s.s) > 0)
+        .map((s) => ({ d: s.d, t: Number(s.t) || 0, s: Math.floor(Number(s.s)) }));
+      const statuses = {};
+      for (const k of Object.keys(obj.statuses)) {
+        const n = Number(k);
+        if (n >= 1 && n <= 114 && (obj.statuses[k] === 'l' || obj.statuses[k] === 'p')) statuses[n] = obj.statuses[k];
+      }
+      state = Object.assign(freshState(), {
+        statuses, sessions,
+        lastReviewed: (obj.lastReviewed && typeof obj.lastReviewed === 'object') ? obj.lastReviewed : {},
+        bookmark: (obj.bookmark && Number(obj.bookmark.surah) >= 1)
+          ? { surah: Number(obj.bookmark.surah), verse: Number(obj.bookmark.verse) || 1 } : null,
+        best: Number(obj.best) || 0,
+        goalMin: Math.min(GOAL_MAX, Math.max(GOAL_MIN, Number(obj.goalMin) || 20)),
+        theme: obj.theme === 'cream' ? 'cream' : 'night',
+        lang: obj.lang === 'fr' ? 'fr' : 'ar',
+        tab: 'settings'
+      });
+      save();
+      revSession = null;
+      readerSurah = null;
+      render();
+      toast(t().importOk);
+    }).catch(() => toast(t().importBad));
+  }
+
+  function resetData(btn) {
+    if (!resetArmed) {
+      resetArmed = true;
+      btn.classList.add('armed');
+      btn.textContent = t().resetConfirm;
+      resetTimer = setTimeout(() => { resetArmed = false; if (state.tab === 'settings') renderBody(); }, 5000);
+      return;
+    }
+    clearTimeout(resetTimer);
+    resetArmed = false;
+    state = Object.assign(freshState(), { theme: state.theme, lang: state.lang, tab: 'settings' });
+    save();
+    revSession = null;
+    readerSurah = null;
+    renderBody();
+    toast(t().resetDone);
+  }
+
+  // ── Mise à jour de l'app ────────────────────────────────
+  function setUpdStatus(msg) {
+    const el = $('#upd-status');
+    if (el) el.textContent = msg;
+  }
+
+  function checkUpdate() {
+    if (!navigator.onLine) { setUpdStatus(t().updOffline); return; }
+    setUpdStatus(t().updChecking);
+    if (!('serviceWorker' in navigator)) { location.reload(); return; }
+    navigator.serviceWorker.getRegistration().then((reg) => {
+      const p = reg ? reg.update().catch(() => {}) : Promise.resolve();
+      return p.then(() => {
+        const ctrl = navigator.serviceWorker.controller;
+        if (!ctrl) { location.reload(); return; }
+        // demande au SW de re-télécharger la coquille (requêtes conditionnelles)
+        ctrl.postMessage({ type: 'REFRESH_SHELL' });
+        clearTimeout(updTimer);
+        updTimer = setTimeout(() => setUpdStatus(t().updFail), 25000);
+      });
+    }).catch(() => setUpdStatus(t().updFail));
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (!e.data || e.data.type !== 'SHELL_REFRESHED') return;
+      clearTimeout(updTimer);
+      if (e.data.ok) {
+        setUpdStatus(t().updReloading);
+        setTimeout(() => location.reload(), 600);
+      } else {
+        setUpdStatus(t().updFail);
+      }
+    });
+  }
+
+  // ── Toast ───────────────────────────────────────────────
+  function toast(msg, opts) {
+    opts = opts || {};
+    const prev = $('#toast');
+    if (prev) prev.remove();
+    const el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'toast';
+    el.dataset.action = 'dismiss-toast'; // un tap hors du bouton referme le toast
+    el.innerHTML = '<span>' + esc(msg) + '</span>' +
+      (opts.label ? '<button class="toast-btn" data-action="' + opts.action + '">' + esc(opts.label) + '</button>' : '');
+    $('#app').appendChild(el);
+    requestAnimationFrame(() => el.classList.add('in'));
+    if (!opts.sticky) {
+      setTimeout(() => {
+        el.classList.remove('in');
+        setTimeout(() => el.remove(), 500);
+      }, 3500);
+    }
   }
 
   // ── Chrome (topbar + tabbar) ────────────────────────────
@@ -503,7 +843,7 @@
       '<button class="top-btn" data-action="lang" aria-label="' + t().langBtn + '">' +
         (isAr() ? 'FR' : 'ع') + '</button>';
 
-    $('#tabbar').innerHTML = ['home', 'surahs', 'review', 'stats'].map((id) =>
+    $('#tabbar').innerHTML = ['home', 'surahs', 'review', 'stats', 'settings'].map((id) =>
       '<button class="tab' + (state.tab === id ? ' on' : '') + '" data-action="tab" data-tab="' + id + '">' +
         TAB_ICONS[id] + '<span>' + t().tabs[id] + '</span></button>'
     ).join('');
@@ -521,11 +861,22 @@
   function renderBody() {
     if (!QURAN) return;
     const body = $('#body');
-    const html = { home: homeHTML, surahs: surahsHTML, review: reviewHTML, stats: statsHTML }[state.tab]();
+    const html = { home: homeHTML, surahs: surahsHTML, review: reviewHTML, stats: statsHTML, settings: settingsHTML }[state.tab]();
     body.innerHTML = html;
     setTimeout(() => {
       body.querySelectorAll('.fade').forEach((el) => el.classList.add('in'));
     }, 30);
+    if (pendingVerse && readerSurah) {
+      const v = pendingVerse;
+      pendingVerse = null;
+      setTimeout(() => {
+        const seg = body.querySelector('[data-v="' + v + '"]');
+        if (seg) {
+          seg.scrollIntoView({ block: 'center' });
+          seg.classList.add('flash');
+        }
+      }, 80);
+    }
   }
 
   function render() {
@@ -577,18 +928,22 @@
     if (next) state.statuses[n] = next; else delete state.statuses[n];
     save();
 
-    if (filter !== 'all') { renderBody(); return; }
-    // mise à jour en place pour préserver la position de défilement
-    const row = $('#body [data-row="' + n + '"]');
-    if (!row) { renderBody(); return; }
-    const s = QURAN.surahs[n - 1];
-    const st = state.statuses[n] || '';
-    row.querySelector('.num-badge').classList.toggle('on', st === 'l');
-    row.querySelector('.surah-meta').innerHTML = surahMeta(s, st);
-    const dot = row.querySelector('.status-dot');
-    dot.className = 'status-dot ' + st;
-    dot.innerHTML = st === 'l' ? CHECK_SVG : '';
-    row.querySelector('.status-btn').setAttribute('aria-label', t().statusBtn(s.name, t().status[st || 'none']));
+    if (filter !== 'all' || sortMode === 'status') {
+      const list = $('#surah-list');
+      if (list) list.innerHTML = surahListHTML();
+    } else {
+      // mise à jour en place pour préserver la position de défilement
+      const row = $('#body [data-row="' + n + '"]');
+      if (!row) { renderBody(); return; }
+      const s = QURAN.surahs[n - 1];
+      const st = state.statuses[n] || '';
+      row.querySelector('.num-badge').classList.toggle('on', st === 'l');
+      row.querySelector('.surah-meta').innerHTML = surahMeta(s, st);
+      const dot = row.querySelector('.status-dot');
+      dot.className = 'status-dot ' + st;
+      dot.innerHTML = st === 'l' ? CHECK_SVG : '';
+      row.querySelector('.status-btn').setAttribute('aria-label', t().statusBtn(s.name, t().status[st || 'none']));
+    }
     const sub = $('#learned-sub');
     if (sub) sub.textContent = t().surahsSub(num(learnedCount()), num(114));
   }
@@ -601,6 +956,7 @@
     switch (action) {
       case 'tab':
         state.tab = el.dataset.tab;
+        if (state.tab === 'surahs') readerSurah = null;
         save();
         renderChrome();
         renderBody();
@@ -609,6 +965,27 @@
       case 'toggle-run': toggleRun(); break;
       case 'cycle': cycleSurah(Number(el.dataset.n)); break;
       case 'filter': filter = el.dataset.f; renderBody(); break;
+      case 'sort': sortMode = el.dataset.m; renderBody(); break;
+      case 'open-surah':
+        openReader(Number(el.dataset.n));
+        $('#body').scrollTop = 0;
+        break;
+      case 'back-surahs':
+        readerSurah = null;
+        renderBody();
+        break;
+      case 'mark-verse': {
+        const v = Number(el.dataset.v);
+        const same = state.bookmark && state.bookmark.surah === readerSurah && state.bookmark.verse === v;
+        state.bookmark = same ? null : { surah: readerSurah, verse: v };
+        save();
+        document.querySelectorAll('#body .verse-seg.bookmarked').forEach((x) => x.classList.remove('bookmarked'));
+        if (!same) el.classList.add('bookmarked');
+        break;
+      }
+      case 'resume':
+        if (state.bookmark) openReader(state.bookmark.surah, state.bookmark.verse);
+        break;
       case 'draw': drawSurah(); renderBody(); break;
       case 'next-verse':
         if (revSession) {
@@ -618,14 +995,16 @@
         }
         break;
       case 'go-surahs':
-        state.tab = 'surahs'; save(); renderChrome(); renderBody();
+        state.tab = 'surahs'; readerSurah = null; save(); renderChrome(); renderBody();
         break;
       case 'theme':
-        state.theme = state.theme === 'night' ? 'cream' : 'night';
+      case 'set-theme':
+        state.theme = action === 'theme' ? (state.theme === 'night' ? 'cream' : 'night') : el.dataset.v;
         save(); render();
         break;
       case 'lang':
-        state.lang = isAr() ? 'fr' : 'ar';
+      case 'set-lang':
+        state.lang = action === 'lang' ? (isAr() ? 'fr' : 'ar') : el.dataset.v;
         save(); render();
         break;
       case 'goal-dec':
@@ -636,7 +1015,28 @@
         state.goalMin = Math.min(GOAL_MAX, state.goalMin + GOAL_STEP);
         save(); renderBody();
         break;
+      case 'export-data': exportData(); break;
+      case 'import-data': { const f = $('#import-file'); if (f) f.click(); break; }
+      case 'reset-data': resetData(el); break;
+      case 'check-update': checkUpdate(); break;
+      case 'reload-app': location.reload(); break;
+      case 'dismiss-toast': el.remove(); break;
       case 'retry': boot(); break;
+    }
+  });
+
+  document.addEventListener('input', (e) => {
+    if (e.target.matches && e.target.matches('[data-input="search"]')) {
+      query = e.target.value;
+      const list = $('#surah-list');
+      if (list) list.innerHTML = surahListHTML();
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    if (e.target.id === 'import-file' && e.target.files && e.target.files[0]) {
+      importData(e.target.files[0]);
+      e.target.value = '';
     }
   });
 
@@ -666,7 +1066,21 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => { /* hors https / non supporté */ });
+      navigator.serviceWorker.register('sw.js').then((reg) => {
+        // signale les nouvelles versions installées en arrière-plan
+        reg.addEventListener('updatefound', () => {
+          // au tout premier install il n'y a pas encore de contrôleur :
+          // ce n'est pas une mise à jour, on ne signale rien
+          const isUpdate = !!navigator.serviceWorker.controller;
+          const w = reg.installing;
+          if (!w || !isUpdate) return;
+          w.addEventListener('statechange', () => {
+            if (w.state === 'activated') {
+              toast(t().updateReady, { action: 'reload-app', label: t().updateBtn, sticky: true });
+            }
+          });
+        });
+      }).catch(() => { /* hors https / non supporté */ });
     });
   }
 })();
