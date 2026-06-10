@@ -1,7 +1,7 @@
 /* وِرد — service worker : application entièrement hors ligne.
    Pré-cache de la coquille, des données coraniques, des polices et des icônes.
    Publier une mise à jour = incrémenter VERSION (et APP_VERSION dans js/app.js). */
-const VERSION = 'wird-v2';
+const VERSION = 'wird-v3';
 
 const ASSETS = [
   './',
@@ -10,6 +10,7 @@ const ASSETS = [
   './css/app.css',
   './js/app.js',
   './data/quran.json',
+  './data/tajweed.json',
   './fonts/UthmanicHafs.woff2',
   './fonts/ReemKufi.woff2',
   './fonts/IBMPlexSansArabic-Light.woff2',

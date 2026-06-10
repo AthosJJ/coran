@@ -5,7 +5,7 @@
 
   // ── Constantes ──────────────────────────────────────────
   const KEY = 'wird:v1';
-  const APP_VERSION = '1.1.0';
+  const APP_VERSION = '1.2.0';
   const GOAL_MIN = 5, GOAL_MAX = 120, GOAL_STEP = 5;
   const THEME_COLOR = { night: '#0B1413', cream: '#F6EFE0' };
 
@@ -38,14 +38,15 @@
       back: 'السور',
       readerHint: 'اضغط على آية لوضع علامة الاستئناف',
       revTitle: 'المراجعة',
-      revLead: 'سورة من محفوظاتك — الأقل مراجعةً تُقدَّم — ثم آية تتلوها من حفظك',
+      revLead: 'سورة من محفوظاتك — الأقل مراجعةً تُقدَّم — تُعرض مخفيّة فتكشف آياتها واحدةً واحدة من حفظك',
       revEmpty: 'عَلِّم سورة واحدة على الأقل كي تبدأ المراجعة',
       goSurahs: 'إلى قائمة السور',
       draw: 'اسحب سورة',
       poolCount: (n) => n + ' سورة في المراجعة',
       surahCap: 'سُورَة',
-      verseOf: (i, n) => 'الآية ' + i + ' من ' + n + ' · اتلُها من حفظك',
-      nextVerse: 'الآية التالية', anotherSurah: 'سورة أخرى',
+      revHint: 'اتلُ الآية من حفظك ثم اضغطها لكشفها',
+      revealedOf: (i, n) => 'كُشِف ' + i + ' من ' + n + ' آيات',
+      revealAll: 'كشف الكل', anotherSurah: 'سورة أخرى',
       statsTitle: 'الإحصاء', statsSub: 'رحلتك مع المصحف',
       learnedCap: 'سور محفوظة', of114: (n) => 'من ' + n + ' سورة',
       totalCap: 'إجمالي وقت القراءة',
@@ -62,6 +63,13 @@
       themeRow: 'الوضع', themeNight: 'ليلي', themeDay: 'نهاري',
       langRow: 'اللغة',
       goalCap: 'الهدف اليومي', goalUnit: 'دقيقة',
+      textSize: 'حجم نص المصحف',
+      tajRow: 'تجويد ملوّن', tajOff: 'بلا', tajOn: 'ملوّن',
+      tajNote: 'تلوين تقريبي مُولَّد آليًّا (مفتوح المصدر) — للاستئناس، لا يُغني عن التلقّي',
+      tajLegend: {
+        m2: 'مدّ حركتان', m4: 'مدّ ٤–٥ حركات', m6: 'مدّ ٦ (لازم)',
+        gh: 'غنّة وإدغام وإخفاء وإقلاب', ql: 'قلقلة', sl: 'لا يُنطق'
+      },
       exportBtn: 'تصدير نسخة احتياطية', exportNote: 'ملف JSON يحوي جلساتك وحالات السور',
       importBtn: 'استيراد نسخة', importOk: 'تم الاستيراد بنجاح', importBad: 'ملف غير صالح',
       resetBtn: 'إعادة تعيين البيانات', resetConfirm: 'اضغط مجددًا للتأكيد',
@@ -102,14 +110,15 @@
       back: 'Sourates',
       readerHint: 'Touche un verset pour poser le signet de reprise',
       revTitle: 'Révision',
-      revLead: 'Une sourate parmi tes mémorisées — les moins révisées en priorité — puis un verset à réciter de mémoire',
+      revLead: 'Une sourate parmi tes mémorisées — les moins révisées en priorité — s’affiche masquée : révèle ses versets un à un, de mémoire',
       revEmpty: 'Marque au moins une sourate comme mémorisée pour commencer la révision',
       goSurahs: 'Voir les sourates',
       draw: 'Tirer une sourate',
       poolCount: (n) => n + (n > 1 ? ' sourates en révision' : ' sourate en révision'),
       surahCap: 'SOURATE',
-      verseOf: (i, n) => 'Verset ' + i + ' sur ' + n + ' · récite-le de mémoire',
-      nextVerse: 'Verset suivant', anotherSurah: 'Autre sourate',
+      revHint: 'Récite le verset de mémoire puis touche-le pour le révéler',
+      revealedOf: (i, n) => i + ' sur ' + n + ' versets révélés',
+      revealAll: 'Tout révéler', anotherSurah: 'Autre sourate',
       statsTitle: 'Statistiques', statsSub: 'Ton chemin avec le Mushaf',
       learnedCap: 'Sourates mémorisées', of114: (n) => 'sur ' + n,
       totalCap: 'Temps total de lecture',
@@ -126,6 +135,13 @@
       themeRow: 'Mode', themeNight: 'Nuit', themeDay: 'Jour',
       langRow: 'Langue',
       goalCap: 'Objectif quotidien', goalUnit: 'min',
+      textSize: 'Taille du texte coranique',
+      tajRow: 'Tajwid coloré', tajOff: 'Non', tajOn: 'Oui',
+      tajNote: 'Coloration indicative générée automatiquement (open source) — une aide, qui ne remplace pas l’apprentissage auprès d’un enseignant',
+      tajLegend: {
+        m2: 'Madd 2 temps', m4: 'Madd 4–5 temps', m6: 'Madd 6 (lāzim)',
+        gh: 'Ghunna, idghām, ikhfā’, iqlāb', ql: 'Qalqala', sl: 'Non prononcé'
+      },
       exportBtn: 'Exporter une sauvegarde', exportNote: 'Fichier JSON avec sessions et états des sourates',
       importBtn: 'Importer une sauvegarde', importOk: 'Sauvegarde importée', importBad: 'Fichier invalide',
       resetBtn: 'Réinitialiser les données', resetConfirm: 'Toucher à nouveau pour confirmer',
@@ -150,6 +166,8 @@
       bookmark: null,      // { surah, verse } signet de reprise
       best: 0,             // plus longue série atteinte
       goalMin: 20,
+      quranScale: 1,       // facteur de taille du texte coranique (0.8 → 1.6)
+      tajweed: false,      // coloration tajwid
       theme: 'night',
       lang: 'ar',
       tab: 'home',
@@ -159,6 +177,8 @@
 
   let state = loadState();
   let QURAN = null;          // { bismillah, surahs: [{n,name,tr,fr,medinan,verses}] }
+  let TAJ = null;            // { groups: [classe par règle], spans: {'s:v': [[a,b,r],…]} }
+  let tajLoading = null;
   let filter = 'all';        // filtre de la liste des sourates
   let query = '';            // recherche dans la liste
   let sortMode = 'mushaf';   // mushaf | length | status
@@ -302,6 +322,49 @@
     return Object.values(state.statuses).filter((s) => s === 'l').length;
   }
 
+  // ── Tajwid ──────────────────────────────────────────────
+  /* Annotations dérivées de cpfair/quran-tajweed (BSD), réalignées et
+     vérifiées caractère par caractère sur notre texte Tanzil. */
+  const TJ_GROUP = {
+    ghunnah: 'gh', idghaam_ghunnah: 'gh', idghaam_no_ghunnah: 'sl',
+    idghaam_mutajanisayn: 'gh', idghaam_mutaqaribayn: 'gh', idghaam_shafawi: 'gh',
+    ikhfa: 'gh', ikhfa_shafawi: 'gh', iqlab: 'gh',
+    madd_2: 'm2', madd_246: 'm4', madd_muttasil: 'm4', madd_munfasil: 'm4', madd_6: 'm6',
+    qalqalah: 'ql', hamzat_wasl: 'sl', lam_shamsiyyah: 'sl', silent: 'sl'
+  };
+
+  function loadTajweed() {
+    if (TAJ) return Promise.resolve(TAJ);
+    if (tajLoading) return tajLoading;
+    tajLoading = fetch('data/tajweed.json')
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((d) => {
+        TAJ = { groups: d.rules.map((r) => TJ_GROUP[r] || 'sl'), spans: d.spans };
+        return TAJ;
+      })
+      .catch((e) => { tajLoading = null; throw e; });
+    return tajLoading;
+  }
+
+  /* HTML d'un verset, coloré si le tajwid est actif et les données chargées */
+  function verseHTML(surah, verseNum, text) {
+    if (!state.tajweed || !TAJ) return esc(text);
+    const ann = TAJ.spans[surah + ':' + verseNum];
+    if (!ann) return esc(text);
+    let out = '', pos = 0;
+    for (const sp of ann) {
+      if (sp[0] > pos) out += esc(text.slice(pos, sp[0]));
+      out += '<i class="tj-' + TAJ.groups[sp[2]] + '">' + esc(text.slice(sp[0], sp[1])) + '</i>';
+      pos = sp[1];
+    }
+    return out + esc(text.slice(pos));
+  }
+
+  function bismillahHTML() {
+    // la basmala est le verset 1:1 : on réutilise ses annotations
+    return verseHTML(1, 1, QURAN.bismillah);
+  }
+
   // ── Ornements SVG ───────────────────────────────────────
   function star8(size, stroke) {
     return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
@@ -374,6 +437,7 @@
           '</div>' +
         '</button>' +
       '</div>' +
+      resumeCardHTML() +
       '<div class="stat-row">' +
         '<div class="stat-card"><div class="stat-glyph">' + star8(14, 1.2) + '</div>' +
           '<div class="stat-num"><b>' + num(streak) + '</b>' + (t().dayUnit ? ' ' + t().dayUnit : '') + '</div>' +
@@ -382,7 +446,6 @@
           '<div class="stat-num"><b id="today-min">' + num(Math.floor(today / 60)) + '</b> ' + t().minUnit + '</div>' +
           '<div class="stat-cap">' + t().todayCard + '</div></div>' +
       '</div>' +
-      resumeCardHTML() +
     '</section>';
   }
 
@@ -463,12 +526,12 @@
     const frLine = isAr() ? '' :
       '<div class="rev-surah-fr">' + esc(s.tr) + ' · ' + esc(s.fr) + '</div>';
     const bismillah = (s.n !== 1 && s.n !== 9)
-      ? '<div class="rev-bismillah" lang="ar">' + esc(QURAN.bismillah) + '</div>' : '';
+      ? '<div class="rev-bismillah" lang="ar">' + bismillahHTML() + '</div>' : '';
     const segs = s.verses.map((v, i) => {
       const n = i + 1;
       const marked = bm && bm.surah === s.n && bm.verse === n;
       return '<span class="verse-seg' + (marked ? ' bookmarked' : '') + '" data-action="mark-verse" data-v="' + n + '">' +
-        esc(v) + ' <span class="verse-num">﴿' + arNum(n) + '﴾</span></span>';
+        verseHTML(s.n, n, v) + ' <span class="verse-num">﴿' + arNum(n) + '﴾</span></span>';
     }).join(' ');
     return '<section class="fade">' +
       '<button class="back-btn" data-action="back-surahs">' + CHEV_SVG + '<span>' + t().back + '</span></button>' +
@@ -523,29 +586,45 @@
     }
 
     const s = QURAN.surahs[revSession.surah - 1];
-    const verse = s.verses[revSession.idx];
-    const sizeClass = verse.length > 320 ? ' vlong' : verse.length > 140 ? ' long' : '';
     const frLine = isAr() ? '' :
       '<div class="rev-surah-fr">' + esc(s.tr) + ' · ' + esc(s.fr) + '</div>';
     const bismillah = (s.n !== 1 && s.n !== 9)
-      ? '<div class="rev-bismillah" lang="ar">' + esc(QURAN.bismillah) + '</div>' : '';
+      ? '<div class="rev-bismillah" lang="ar">' + bismillahHTML() + '</div>' : '';
+
+    const segs = s.verses.map((v, i) => {
+      const n = i + 1;
+      if (revSession.revealed[i]) {
+        return '<span class="verse-seg" data-v="' + n + '">' +
+          verseHTML(s.n, n, v) + ' <span class="verse-num">﴿' + arNum(n) + '﴾</span></span>';
+      }
+      return '<span class="verse-seg masked" data-action="reveal-verse" data-v="' + n + '">' +
+        maskVerse(v) + ' <span class="verse-num">﴿' + arNum(n) + '﴾</span></span>';
+    }).join(' ');
+    const revealed = revSession.revealed.filter(Boolean).length;
 
     return '<section class="fade">' +
       '<div class="rev-frame" style="padding-top:14px">' +
         '<span class="rev-surah-cap">' + t().surahCap + '</span>' +
         '<h1 class="rev-surah-name" lang="ar" dir="rtl">' + esc(s.name) + '</h1>' + frLine +
-        '<div class="rev-sep">' + star8(13, 1.2) + '</div>' + bismillah +
-        '<div class="verse-zone">' +
-          '<p class="verse-text verse-fade fade' + sizeClass + '" lang="ar">' + esc(verse) +
-            '<span class="verse-num"> ﴿' + arNum(revSession.idx + 1) + '﴾</span></p>' +
-          '<span class="verse-count">' + t().verseOf(num(revSession.idx + 1), num(s.verses.length)) + '</span>' +
-        '</div>' +
+        '<div class="rev-sep">' + star8(13, 1.2) + '</div>' +
+        '<div class="reader-hint">' + t().revHint + '</div>' +
+        bismillah +
+        '<p class="reader-text" lang="ar" dir="rtl">' + segs + '</p>' +
+        '<div class="verse-count" id="rev-count" style="margin-top:22px">' +
+          t().revealedOf(num(revealed), num(s.verses.length)) + '</div>' +
         '<div class="rev-actions">' +
-          '<button class="btn btn-gold" data-action="next-verse">' + t().nextVerse + '</button>' +
-          '<button class="btn btn-ghost" data-action="draw">' + t().anotherSurah + '</button>' +
+          '<button class="btn btn-gold" data-action="draw">' + t().anotherSurah + '</button>' +
+          '<button class="btn btn-ghost" data-action="reveal-all">' + t().revealAll + '</button>' +
         '</div>' +
       '</div>' +
     '</section>';
+  }
+
+  /* version « pointillée » d'un verset masqué : un point par lettre de base */
+  function maskVerse(v) {
+    return esc(v
+      .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+      .replace(/[^\s]/g, '·'));
   }
 
   /* Tirage pondéré : plus une sourate n'a pas été révisée depuis longtemps,
@@ -569,7 +648,9 @@
     state.lastReviewed[next] = now;
     save();
     const verses = QURAN.surahs[next - 1].verses;
-    revSession = { surah: next, idx: Math.floor(Math.random() * verses.length) };
+    // toute la sourate est masquée, sauf le premier verset
+    const revealed = verses.map((v, i) => i === 0);
+    revSession = { surah: next, revealed };
   }
 
   // ── Écran statistiques ──────────────────────────────────
@@ -677,6 +758,23 @@
               '<span class="goal-val">' + num(state.goalMin) + '<small>' + t().goalUnit + '</small></span>' +
               '<button class="goal-btn" data-action="goal-inc" aria-label="+">+</button>' +
             '</div></div>' +
+          '<div class="set-row"><span class="set-label">' + t().textSize + '</span>' +
+            '<div class="goal-ctrl">' +
+              '<button class="goal-btn" data-action="qs-dec" aria-label="−">−</button>' +
+              '<span class="goal-val">' + num(Math.round(state.quranScale * 100)) + '<small>%</small></span>' +
+              '<button class="goal-btn" data-action="qs-inc" aria-label="+">+</button>' +
+            '</div></div>' +
+          '<div class="set-row"><span class="set-label">' + t().tajRow + '</span>' +
+            segHTML('set-taj', [
+              { v: 'off', label: t().tajOff, on: !state.tajweed },
+              { v: 'on', label: t().tajOn, on: state.tajweed }
+            ]) + '</div>' +
+          (state.tajweed
+            ? '<div class="tj-legend">' + ['m2', 'm4', 'm6', 'gh', 'ql', 'sl'].map((g) =>
+                '<span class="tj-key tj-' + g + '"><i class="tj-dot"></i><span style="color:var(--muted)">' +
+                esc(t().tajLegend[g]) + '</span></span>').join('') + '</div>' +
+              '<div class="set-note" style="padding-top:4px">' + t().tajNote + '</div>'
+            : '') +
         '</div>' +
 
         '<div class="big-stat">' +
@@ -853,6 +951,7 @@
     document.documentElement.lang = state.lang;
     document.documentElement.dir = isAr() ? 'rtl' : 'ltr';
     $('#app').dataset.theme = state.theme;
+    $('#app').style.setProperty('--qs', state.quranScale);
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = THEME_COLOR[state.theme];
   }
@@ -863,6 +962,9 @@
     const body = $('#body');
     const html = { home: homeHTML, surahs: surahsHTML, review: reviewHTML, stats: statsHTML, settings: settingsHTML }[state.tab]();
     body.innerHTML = html;
+    // motif estompé quand du texte coranique occupe l'écran
+    $('#app').classList.toggle('quran-screen',
+      !!readerSurah || (state.tab === 'review' && !!revSession));
     setTimeout(() => {
       body.querySelectorAll('.fade').forEach((el) => el.classList.add('in'));
     }, 30);
@@ -956,7 +1058,7 @@
     switch (action) {
       case 'tab':
         state.tab = el.dataset.tab;
-        if (state.tab === 'surahs') readerSurah = null;
+        readerSurah = null; // changer d'onglet referme toujours le lecteur
         save();
         renderChrome();
         renderBody();
@@ -986,11 +1088,24 @@
       case 'resume':
         if (state.bookmark) openReader(state.bookmark.surah, state.bookmark.verse);
         break;
-      case 'draw': drawSurah(); renderBody(); break;
-      case 'next-verse':
+      case 'draw': drawSurah(); renderBody(); $('#body').scrollTop = 0; break;
+      case 'reveal-verse': {
+        if (!revSession) break;
+        const v = Number(el.dataset.v);
+        revSession.revealed[v - 1] = true;
+        // révélation en place pour ne pas perdre la position de défilement
+        const s = QURAN.surahs[revSession.surah - 1];
+        el.classList.remove('masked');
+        el.removeAttribute('data-action');
+        el.innerHTML = verseHTML(s.n, v, s.verses[v - 1]) +
+          ' <span class="verse-num">﴿' + arNum(v) + '﴾</span>';
+        const c = $('#rev-count');
+        if (c) c.textContent = t().revealedOf(num(revSession.revealed.filter(Boolean).length), num(s.verses.length));
+        break;
+      }
+      case 'reveal-all':
         if (revSession) {
-          const len = QURAN.surahs[revSession.surah - 1].verses.length;
-          revSession.idx = (revSession.idx + 1) % len;
+          revSession.revealed = revSession.revealed.map(() => true);
           renderBody();
         }
         break;
@@ -1014,6 +1129,21 @@
       case 'goal-inc':
         state.goalMin = Math.min(GOAL_MAX, state.goalMin + GOAL_STEP);
         save(); renderBody();
+        break;
+      case 'qs-dec':
+      case 'qs-inc': {
+        const step = action === 'qs-inc' ? 0.1 : -0.1;
+        state.quranScale = Math.round(Math.min(1.6, Math.max(0.8, state.quranScale + step)) * 10) / 10;
+        save(); applyChrome(); renderBody();
+        break;
+      }
+      case 'set-taj':
+        state.tajweed = el.dataset.v === 'on';
+        save();
+        if (state.tajweed && !TAJ) {
+          loadTajweed().then(() => renderBody()).catch(() => toast(t().updFail));
+        }
+        renderBody();
         break;
       case 'export-data': exportData(); break;
       case 'import-data': { const f = $('#import-file'); if (f) f.click(); break; }
@@ -1044,6 +1174,27 @@
     if (!document.hidden && state.tab === 'home') renderBody();
   });
 
+  // ── Geste de retour (swipe horizontal dans le lecteur) ──
+  let swipeStart = null;
+  const bodyEl = document.getElementById('body');
+  bodyEl.addEventListener('touchstart', (e) => {
+    swipeStart = e.touches.length === 1
+      ? { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() }
+      : null;
+  }, { passive: true });
+  bodyEl.addEventListener('touchend', (e) => {
+    if (!swipeStart || !e.changedTouches.length) return;
+    const dx = e.changedTouches[0].clientX - swipeStart.x;
+    const dy = e.changedTouches[0].clientY - swipeStart.y;
+    const dt = Date.now() - swipeStart.t;
+    swipeStart = null;
+    if (dt > 700 || Math.abs(dx) < 70 || Math.abs(dx) < 2.2 * Math.abs(dy)) return;
+    if (readerSurah) {
+      readerSurah = null;
+      renderBody();
+    }
+  }, { passive: true });
+
   // ── Démarrage ───────────────────────────────────────────
   function boot() {
     applyChrome();
@@ -1054,6 +1205,7 @@
         QURAN = data;
         renderBody();
         startTick();
+        if (state.tajweed) loadTajweed().then(() => renderBody()).catch(() => {});
       })
       .catch(() => {
         $('#body').innerHTML = '<div class="splash err">' +

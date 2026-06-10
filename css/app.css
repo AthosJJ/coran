@@ -50,6 +50,12 @@
   --accent-ink: #14100B;
   --ring-track: rgba(234, 227, 210, 0.08);
   --emerald: #4E8E76;
+  --tj-m2: #E8A37E;
+  --tj-m4: #E97A66;
+  --tj-m6: #FF6B5E;
+  --tj-gh: #7DC383;
+  --tj-ql: #6FB4E8;
+  --tj-sl: rgba(234, 227, 210, 0.42);
   --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke='%23C9A45C' stroke-width='1'%3E%3Crect x='28' y='28' width='40' height='40'/%3E%3Crect x='28' y='28' width='40' height='40' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3Cpath d='M48 0v21M48 75v21M0 48h21M75 48h21M0 0l21 21M96 96L75 75M96 0L75 21M0 96l21-21'/%3E%3C/g%3E%3C/svg%3E");
 }
 .wird[data-theme='cream'] {
@@ -63,6 +69,12 @@
   --accent-ink: #FBF6EA;
   --ring-track: rgba(65, 48, 31, 0.09);
   --emerald: #3E7E68;
+  --tj-m2: #B96A38;
+  --tj-m4: #BA4530;
+  --tj-m6: #9E1F15;
+  --tj-gh: #2F7D4F;
+  --tj-ql: #2D6FB8;
+  --tj-sl: rgba(65, 48, 31, 0.42);
   --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke='%236B4A2F' stroke-width='1'%3E%3Crect x='28' y='28' width='40' height='40'/%3E%3Crect x='28' y='28' width='40' height='40' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3Cpath d='M48 0v21M48 75v21M0 48h21M75 48h21M0 0l21 21M96 96L75 75M96 0L75 21M0 96l21-21'/%3E%3C/g%3E%3C/svg%3E");
 }
 .wird[data-theme='cream'] { --accent-deep: color-mix(in oklab, var(--accent), #41301F 32%); }
@@ -74,7 +86,7 @@ html, body {
   height: 100%;
   background: #060B0A;
 }
-body { overscroll-behavior: none; }
+body { overscroll-behavior: none; touch-action: manipulation; }
 
 .wird {
   --accent: #C9A45C;
@@ -99,14 +111,17 @@ body { overscroll-behavior: none; }
   opacity: 0.08;
   pointer-events: none;
   z-index: 0;
+  transition: opacity 0.8s ease;
 }
+/* motif presque invisible quand du texte coranique est à l'écran */
+.wird.quran-screen .wird-pattern { opacity: 0.025; }
 .wird-body {
   position: relative;
   z-index: 1;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: calc(64px + env(safe-area-inset-top, 0px)) 24px calc(112px + env(safe-area-inset-bottom, 0px));
+  padding: calc(64px + env(safe-area-inset-top, 0px)) 24px calc(92px + env(safe-area-inset-bottom, 0px));
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -308,7 +323,7 @@ html[dir='rtl'] .back-btn .chev { transform: none; }
 .reader-hint { font-size: 11px; color: var(--faint); font-weight: 300; margin-bottom: 22px; }
 .reader-text {
   font-family: var(--f-quran);
-  font-size: 24px; line-height: 2.35;
+  font-size: calc(24px * var(--qs, 1)); line-height: 2.35;
   color: var(--text);
   text-align: justify;
   margin: 0;
@@ -321,6 +336,8 @@ html[dir='rtl'] .back-btn .chev { transform: none; }
   transition: background 0.45s ease, box-shadow 0.45s ease;
   -webkit-tap-highlight-color: transparent;
 }
+.verse-seg.masked { color: var(--faint); }
+.verse-seg.masked .verse-num { opacity: 0.55; }
 .verse-seg.bookmarked {
   background: color-mix(in oklab, var(--accent), transparent 86%);
   box-shadow: inset 0 -1.5px 0 var(--accent);
@@ -338,7 +355,7 @@ html[dir='rtl'] .back-btn .chev { transform: none; }
   display: flex; align-items: center; gap: 14px;
   background: var(--card); border: 1px solid var(--card-line);
   border-radius: 18px; padding: 15px 18px;
-  margin-top: 14px;
+  margin-top: 26px;
   color: var(--text); font-family: var(--f-ui);
   text-align: start; cursor: pointer;
   transition: background 0.8s ease, border-color 0.8s ease;
@@ -385,7 +402,7 @@ html[dir='rtl'] .resume-card .chev { transform: scaleX(-1); }
 .rev-sep::before, .rev-sep::after { content: ''; flex: 1; height: 1px; background: var(--card-line); }
 
 .rev-bismillah {
-  font-family: var(--f-quran); font-size: 21px; color: var(--muted);
+  font-family: var(--f-quran); font-size: calc(21px * var(--qs, 1)); color: var(--muted);
   margin-bottom: 30px; line-height: 1.8; direction: rtl;
 }
 .verse-zone {
@@ -396,7 +413,7 @@ html[dir='rtl'] .resume-card .chev { transform: scaleX(-1); }
 }
 .verse-text {
   font-family: var(--f-quran);
-  font-size: 31px; line-height: 2.25;
+  font-size: calc(31px * var(--qs, 1)); line-height: 2.25;
   text-wrap: balance;
   color: var(--text);
   direction: rtl;
@@ -404,8 +421,8 @@ html[dir='rtl'] .resume-card .chev { transform: scaleX(-1); }
   max-height: 46vh;
   overflow-y: auto;
 }
-.verse-text.long { font-size: 25px; line-height: 2.1; text-wrap: wrap; }
-.verse-text.vlong { font-size: 20px; line-height: 2; text-wrap: wrap; }
+.verse-text.long { font-size: calc(25px * var(--qs, 1)); line-height: 2.1; text-wrap: wrap; }
+.verse-text.vlong { font-size: calc(20px * var(--qs, 1)); line-height: 2; text-wrap: wrap; }
 .verse-num { color: var(--accent-deep); font-size: 0.85em; }
 .verse-fade { transition-duration: 0.9s; }
 .verse-count { font-size: 12px; color: var(--faint); font-weight: 300; }
@@ -519,10 +536,26 @@ html[dir='rtl'] .resume-card .chev { transform: scaleX(-1); }
   font-size: 10.5px; font-weight: 300; color: var(--faint); line-height: 1.9;
 }
 
+/* ── Tajwid ────────────────────────────────────────────── */
+.tj-m2 { color: var(--tj-m2); }
+.tj-m4 { color: var(--tj-m4); }
+.tj-m6 { color: var(--tj-m6); }
+.tj-gh { color: var(--tj-gh); }
+.tj-ql { color: var(--tj-ql); }
+.tj-sl { color: var(--tj-sl); }
+i[class^='tj-'] { font-style: normal; }
+
+.tj-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 11px 0 4px; }
+.tj-key {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 300;
+}
+.tj-dot { width: 9px; height: 9px; border-radius: 99px; background: currentColor; flex-shrink: 0; }
+
 /* ── Toast ─────────────────────────────────────────────── */
 .toast {
   position: absolute; z-index: 40;
-  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(82px + env(safe-area-inset-bottom, 0px));
   inset-inline: 18px;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   background: color-mix(in srgb, var(--bg2), transparent 4%);
@@ -546,7 +579,7 @@ html[dir='rtl'] .resume-card .chev { transform: scaleX(-1); }
 .tabbar {
   position: absolute; z-index: 30;
   bottom: 0; left: 0; right: 0;
-  padding: 10px 12px calc(14px + env(safe-area-inset-bottom, 0px));
+  padding: 7px 12px calc(6px + env(safe-area-inset-bottom, 0px));
   display: grid; grid-template-columns: repeat(5, 1fr);
   background: color-mix(in srgb, var(--bg), transparent 18%);
   backdrop-filter: blur(18px);
@@ -554,8 +587,8 @@ html[dir='rtl'] .resume-card .chev { transform: scaleX(-1); }
   border-top: 1px solid var(--card-line);
 }
 .tab {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  background: none; border: none; cursor: pointer; padding: 6px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; cursor: pointer; padding: 4px 0 2px;
   color: var(--faint); font-family: var(--f-ui); font-size: 10.5px; font-weight: 400;
   transition: color 0.45s ease;
   -webkit-tap-highlight-color: transparent;
