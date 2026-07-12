@@ -5,7 +5,7 @@
 
   // ── Constantes ──────────────────────────────────────────
   const KEY = 'wird:v1';
-  const APP_VERSION = '1.2.1';
+  const APP_VERSION = '1.2.2';
   const GOAL_MIN = 5, GOAL_MAX = 120, GOAL_STEP = 5;
   const THEME_COLOR = { night: '#0B1413', cream: '#F6EFE0' };
 
@@ -441,7 +441,7 @@
           '<svg viewBox="0 0 282 282">' +
             '<circle cx="141" cy="141" r="' + RING_R + '" fill="none" stroke="var(--ring-track)" stroke-width="5"></circle>' +
             '<circle id="ring-prog" class="' + (running ? 'breathing' : '') + '" cx="141" cy="141" r="' + RING_R + '" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="' + RING_C + '" stroke-dashoffset="' + ringOffset(today) + '" transform="rotate(-90 141 141)" style="transition: stroke-dashoffset 1s linear"></circle>' +
-            '<g fill="var(--accent-deep)" opacity="0.9"><circle cx="141" cy="9" r="2.2"></circle></g>' +
+            '<g class="ring-dot" style="animation-delay: -' + (today % 60) + 's" fill="var(--accent-deep)" opacity="0.9"><circle cx="141" cy="9" r="3"></circle></g>' +
           '</svg>' +
           '<div class="ring-center">' +
             '<div class="ring-time" id="clock">' + fmtClock(today) + '</div>' +
@@ -852,9 +852,16 @@
         const n = Number(k);
         if (n >= 1 && n <= 114 && (obj.statuses[k] === 'l' || obj.statuses[k] === 'p')) statuses[n] = obj.statuses[k];
       }
+      const lastReviewed = {};
+      if (obj.lastReviewed && typeof obj.lastReviewed === 'object') {
+        for (const k of Object.keys(obj.lastReviewed)) {
+          const n = Number(k), v = Number(obj.lastReviewed[k]);
+          if (n >= 1 && n <= 114 && v > 0) lastReviewed[n] = v;
+        }
+      }
       state = Object.assign(freshState(), {
         statuses, sessions,
-        lastReviewed: (obj.lastReviewed && typeof obj.lastReviewed === 'object') ? obj.lastReviewed : {},
+        lastReviewed,
         bookmark: (obj.bookmark && Number(obj.bookmark.surah) >= 1)
           ? { surah: Number(obj.bookmark.surah), verse: Number(obj.bookmark.verse) || 1 } : null,
         best: Number(obj.best) || 0,
@@ -979,6 +986,9 @@
     const body = $('#body');
     const html = { home: homeHTML, surahs: surahsHTML, review: reviewHTML, stats: statsHTML, settings: settingsHTML }[state.tab]();
     body.innerHTML = html;
+    // tout re-rendu désarme le bouton de réinitialisation
+    resetArmed = false;
+    clearTimeout(resetTimer);
     // motif estompé quand du texte coranique occupe l'écran
     $('#app').classList.toggle('quran-screen',
       !!readerSurah || (state.tab === 'review' && !!revSession));

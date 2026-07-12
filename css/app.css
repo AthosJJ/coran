@@ -221,6 +221,18 @@ body { overscroll-behavior: none; touch-action: manipulation; }
   50% { opacity: 1; }
 }
 
+/* aiguille des secondes : le point d'accent fait le tour en une minute,
+   calé sur le temps écoulé, figé quand le chrono est à l'arrêt */
+.ring-dot {
+  transform-origin: 50% 50%;
+  transform-box: view-box;
+  animation: ring-spin 60s linear infinite;
+  animation-play-state: paused;
+}
+.ring-btn.running .ring-dot { animation-play-state: running; }
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ring-dot { animation: none; } }
+
 .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 30px; }
 .stat-card {
   background: var(--card);

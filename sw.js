@@ -1,7 +1,7 @@
 /* وِرد — service worker : application entièrement hors ligne.
    Pré-cache de la coquille, des données coraniques, des polices et des icônes.
    Publier une mise à jour = incrémenter VERSION (et APP_VERSION dans js/app.js). */
-const VERSION = 'wird-v4';
+const VERSION = 'wird-v5';
 
 const ASSETS = [
   './',
