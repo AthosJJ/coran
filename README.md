@@ -4,14 +4,14 @@ PWA de suivi de lecture et de mémorisation du Coran (lecture **Ḥafṣ ʿan ʿ
 
 ## Fonctionnalités
 
-- **Chrono de lecture** — bouton Démarrer/Arrêter au centre d'un anneau de progression vers l'objectif quotidien (réglable dans Réglages). Chaque session est enregistrée ; le chrono survit à la fermeture de l'app (horodatage persistant).
-- **Suivi des 114 sourates** — trois états cyclables : non commencée → en cours de mémorisation → mémorisée. Filtres par état, **recherche** (nom arabe, translittération, nom français ou numéro, insensible aux accents et harakāt) et **tri** (ordre du mushaf, les plus courtes d'abord, par état).
-- **Lecture d'une sourate** — taper une sourate ouvre son texte intégral (bismillah + versets en écriture Uthmani). Toucher un verset y pose le **signet de reprise** ; l'accueil affiche alors une carte « Reprendre la lecture » qui rouvre la sourate au bon verset.
-- **Révision intelligente** — tire une sourate parmi les mémorisées avec **pondération par ancienneté de révision** (les moins révisées récemment sortent en priorité, les jamais révisées d'abord). La sourate s'affiche **entièrement masquée en pointillé** (sauf le premier verset) : on récite chaque verset de mémoire puis on le touche pour le révéler et vérifier. Fonctionne 100 % hors ligne.
-- **Tajwid coloré** (optionnel) — coloration des règles de tajwid (madd, ghunna/idghām/ikhfā'/iqlāb, qalqala, lettres muettes) dans le lecteur et la révision, avec légende dans les Réglages. Voir la section dédiée ci-dessous.
-- **Statistiques** — sourates mémorisées, temps total, série (streak) de jours consécutifs avec record, cumuls par jour et par semaine, barres des 7 derniers jours.
-- **Réglages** — thème nuit/jour, langue arabe (RTL) / français (LTR), objectif quotidien, **taille du texte coranique** (échelle 1 → 10, soit 100 % → 200 %), tajwid, **export/import des données** (fichier JSON), **réinitialisation** (avec double confirmation) et **recherche de mise à jour**. Les boutons rapides thème/langue restent en haut d'écran, à position fixe quelle que soit la langue.
-- **Confort de lecture** — le zoom global de l'app est bloqué (la taille du texte coranique se règle dans l'app), le motif géométrique d'arrière-plan s'estompe automatiquement quand du texte coranique est à l'écran, et un swipe horizontal referme le lecteur de sourate.
+- **Chrono de lecture** — l'arc doré de l'anneau fait un tour complet par minute (comme un chronomètre) ; l'anneau intérieur montre la progression vers l'objectif du jour et passe au vert une fois atteint. Le grand chiffre donne la lecture du jour, le libellé la durée de la séance en cours. Hors de l'accueil, une pastille en haut de l'écran rappelle que le chrono tourne (un tap l'arrête). Les sessions sont découpées à minuit, un tap accidentel de moins de 10 s n'est pas compté, chaque session enregistrée peut être annulée, et un chrono resté ouvert plus de 3 h déclenche une question (saisir la durée réelle, tout garder ou ignorer).
+- **Suivi des 114 sourates** — trois états : non commencée → en cours de mémorisation → mémorisée (légende au premier lancement, annulation si une sourate mémorisée est décochée). **Recherche** tolérante (arabe sans harakāt, translittération, nom français, graphies françaises comme « nour » ou « yassine », numéro) avec bouton d'effacement, filtres et tri.
+- **Lecteur de sourate** — texte Uthmani intégral, barre collée en haut (retour, nom de la sourate, révision masquée, « aller au verset »), **signet de reprise** posé d'un tap (avec annulation), carte « Reprendre la lecture » sur l'accueil, fin de sourate avec « Sourate suivante » et choix du statut. La position de lecture survit aux changements d'onglet et à une relance de l'app ; l'écran reste allumé pendant la lecture.
+- **Révision masquée** — tirage pondéré par ancienneté de révision parmi les sourates mémorisées (ou révision d'une sourate précise depuis le lecteur). La sourate s'affiche masquée en pointillés (le premier verset visible), on révèle chaque verset d'un tap après l'avoir récité. Les longues sourates (plus de 40 versets) se révisent **par passages de 20 versets**, qui s'enchaînent d'une fois sur l'autre. La session survit à une relance ; abandonner une révision entamée demande confirmation.
+- **Tajwid coloré** (optionnel) — voir la section dédiée ci-dessous.
+- **Statistiques** — sourates mémorisées et part du Mushaf réellement couverte (en versets), temps total, série de jours avec record, barres des 7 derniers jours avec ligne d'objectif, historiques par jour et par semaine, mis à jour en direct pendant une séance.
+- **Réglages** — thème nuit/jour, langue arabe (RTL) / français (LTR), objectif quotidien, taille du texte coranique (1 → 10, avec aperçu), tajwid, export/import JSON (avec confirmation et annulation), réinitialisation (double geste, annulable, les réglages sont conservés), recherche de mise à jour.
+- **Accessibilité** — contrastes conformes WCAG AA dans les deux thèmes, cibles tactiles de 44 px, accords grammaticaux arabes (العدد والمعدود) et français, compatibilité VoiceOver (annonces, états, focus conservé), respect de « réduire les animations ».
 
 ## Données coraniques : source et raisons du choix
 
@@ -34,6 +34,8 @@ Les annotations (`data/tajweed.json`) dérivent de [cpfair/quran-tajweed](https:
 
 ## Typographie
 
+> Affichage : la police KFGQPC ne dessine pas le petit mîm bas (U+06ED) qui suit une kasra (iqlāb sous tanwīn kasra, 99 occurrences) et affiche un cercle pointillé à la place. L'app le remplace **à l'affichage uniquement** par U+06E2, que la police place sous la lettre comme dans le Mushaf de Médine ; le fichier `data/quran.json` reste le texte Tanzil inchangé.
+
 | Usage | Police | Fichier |
 |---|---|---|
 | Texte coranique | **KFGQPC Uthmanic Script HAFS** (Complexe du Roi Fahd) | `fonts/UthmanicHafs.woff2` |
@@ -50,7 +52,9 @@ La police Hafs est la conversion woff2 de la police officielle du KFGQPC, récup
 
 Tous les chemins sont relatifs : l'app fonctionne servie depuis un sous-chemin (`https://<user>.github.io/<repo>/`).
 
-1. **Settings → Pages → Build and deployment** : *Deploy from a branch*, choisir la branche et le dossier `/ (root)`.
+Le dépôt n'a qu'**une seule branche, `main`**, qui est à la fois la branche par défaut et la source de GitHub Pages.
+
+1. **Settings → Pages → Build and deployment** : *Deploy from a branch*, branche **`main`**, dossier `/ (root)`.
 2. Attendre la publication, puis ouvrir l'URL en HTTPS (requis pour le service worker).
 
 ### Installation sur iPhone (iOS 16.4+)
@@ -62,7 +66,7 @@ Tous les chemins sont relatifs : l'app fonctionne servie depuis un sous-chemin (
 ### Publier une mise à jour
 
 1. Avant de pousser, incrémenter **`VERSION` dans `sw.js`** (ex. `wird-v3`) et **`APP_VERSION` dans `js/app.js`** (affichée dans Réglages).
-2. Pousser sur la branche publiée par GitHub Pages.
+2. Pousser sur `main`, puis vérifier dans l'onglet **Actions** que le run « pages build and deployment » a construit ce commit-là (un build lancé à la seconde du push peut reprendre le commit précédent : il suffit alors de relancer le run).
 3. Côté utilisateur, deux chemins :
    - **automatique** : au prochain lancement en ligne, le navigateur détecte le nouveau `sw.js`, installe la nouvelle version et l'app affiche un bandeau « Nouvelle version prête — Actualiser » ;
    - **manuel** : Réglages → « Rechercher une mise à jour » force la vérification, re-télécharge la coquille (requêtes conditionnelles, donc léger si rien n'a changé) et recharge l'app.

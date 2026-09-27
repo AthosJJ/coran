@@ -1,7 +1,7 @@
 /* وِرد — service worker : application entièrement hors ligne.
    Pré-cache de la coquille, des données coraniques, des polices et des icônes.
    Publier une mise à jour = incrémenter VERSION (et APP_VERSION dans js/app.js). */
-const VERSION = 'wird-v5';
+const VERSION = 'wird-v6';
 
 const ASSETS = [
   './',
@@ -23,9 +23,13 @@ const ASSETS = [
   './icons/icon-maskable-512.png'
 ];
 
+/* 'no-cache' : chaque fichier est revalidé auprès du serveur (ETag), sinon la
+   nouvelle version du service worker précacherait l'ancien code depuis le cache HTTP */
+const fresh = (url) => new Request(url, { cache: 'no-cache' });
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(VERSION).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(VERSION).then((cache) => cache.addAll(ASSETS.map(fresh))).then(() => self.skipWaiting())
   );
 });
 
@@ -38,24 +42,36 @@ self.addEventListener('activate', (event) => {
 });
 
 /* Mise à jour à la demande (bouton « Rechercher une mise à jour ») :
-   re-télécharge la coquille avec des requêtes conditionnelles (ETag → 304
-   si inchangé) et remplace le cache, puis prévient le client. */
+   revalide la coquille, remplace le cache et indique au client si quelque chose a changé. */
 self.addEventListener('message', (event) => {
   if (!event.data || event.data.type !== 'REFRESH_SHELL') return;
+  const reply = (msg) => { if (event.source) event.source.postMessage(Object.assign({ type: 'SHELL_REFRESHED' }, msg)); };
   const job = refreshShell()
-    .then((ok) => { if (event.source) event.source.postMessage({ type: 'SHELL_REFRESHED', ok }); })
-    .catch(() => { if (event.source) event.source.postMessage({ type: 'SHELL_REFRESHED', ok: false }); });
+    .then((changed) => reply({ ok: true, changed }))
+    .catch(() => reply({ ok: false }));
   if (event.waitUntil) event.waitUntil(job);
 });
+
+function sameResponse(a, b) {
+  const tag = (r) => r.headers.get('etag') || r.headers.get('last-modified');
+  if (tag(a) && tag(b)) return Promise.resolve(tag(a) === tag(b));
+  return Promise.all([a.clone().arrayBuffer(), b.clone().arrayBuffer()]).then(([x, y]) => {
+    if (x.byteLength !== y.byteLength) return false;
+    const u = new Uint8Array(x), v = new Uint8Array(y);
+    for (let i = 0; i < u.length; i++) if (u[i] !== v[i]) return false;
+    return true;
+  });
+}
 
 function refreshShell() {
   return caches.open(VERSION).then((cache) =>
     Promise.all(ASSETS.map((url) =>
-      fetch(url, { cache: 'no-cache' }).then((res) => {
+      Promise.all([cache.match(url), fetch(fresh(url))]).then(([old, res]) => {
         if (!res.ok) throw new Error(url);
-        return cache.put(url, res);
+        const check = old ? sameResponse(old, res) : Promise.resolve(false);
+        return check.then((same) => cache.put(url, res).then(() => !same));
       })
-    )).then(() => true)
+    )).then((changes) => changes.some(Boolean))
   );
 }
 
